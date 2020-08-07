@@ -1,0 +1,41 @@
+---
+title: Query for Data
+author: Bryce Mecum <mecum@nceas.ucsb.edu>
+---
+
+**Task:** Query DataONE for data that's relevant to your interests
+
+DataONE provides a mechanism for one or more query services to be available to clients wanting to query across the federation.
+
+First, load the `dataone` R package:
+
+```{r}
+library(dataone)
+```
+
+```{r}
+cn <- CNode()
+listQueryEngines(cn)
+```
+
+While the above query services can be accessed directly via the HTTP API, the `dataone` R package provides a `query` function which makes access to the "solr" query engine more user-friendly.
+
+The `list` we pass into `query` matches [Lucene Query Syntax](https://lucene.apache.org/solr/) provided by Solr and lets us make some pretty advanced queries. Let's search for latest versions of metadata records about tundra permafrost and return a list of titles for them:
+
+```{r}
+query(cn, list(
+  q = "tundra permafrost+AND+formatType:METADATA+AND+-obsoletedBy:*",
+  fl = "title",
+  rows = 5
+))
+```
+
+`query` returns a `list` by default but we can change it to a `data.frame` which may make the results more useful:
+
+```{r}
+query(cn, list(
+  q = "tundra permafrost+AND+formatType:METADATA+AND+-obsoletedBy:*",
+  fl = "title",
+  rows = 5
+), as = "data.frame")
+```

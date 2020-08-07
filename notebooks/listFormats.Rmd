@@ -1,0 +1,30 @@
+---
+title: List Nodes in Production
+author: Bryce Mecum <mecum@nceas.ucsb.edu>
+---
+
+**Task:** Connect to the DataONE production environment, retrieve the list of nodes, and print out the list.
+
+First, load the `dataone` R package:
+
+```{r}
+library(dataone)
+```
+
+Establish a connection to the CN in production environment:
+
+```{r}
+client <- D1Client() # See ?CNode for other environments
+```
+
+List the nodes in that environment with `listNodes`:
+
+```{r}
+nodes <- listMemberNodes(client)
+```
+
+Now we can print out the identifiers for each node:
+
+```{r}
+lapply(nodes, function(node) node@identifier)
+```

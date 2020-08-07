@@ -1,0 +1,46 @@
+---
+title: List Objects
+author: Bryce Mecum <mecum@nceas.ucsb.edu>
+---
+
+**Task:** Connect to the DataONE production environment, retrieve a few listings of objects.
+
+First, load the `dataone` R package and connect to the production Coordinating Node:
+
+```{r}
+library(dataone)
+cn <- CNode()
+```
+
+`listObjects` accepts a number of optional arguments (see `?listObjects`) such as `count` which controls the number of objects that are returned:
+
+```{r}
+listObjects(cn, count = 5)
+```
+
+As another example, we can filter to _just_ CSV objects created within a time frame:
+
+```{r}
+csvs <- listObjects(cn, 
+                    fromDate = "2020-01-01T00:00:00.000Z", 
+                    toDate = "2021-01-01T00:00:00.000Z", 
+                    formatId = "text/csv", 
+                    count = 5)
+length(csvs$objectInfo)
+```
+
+You can see we received five results like we requested but there are many more available:
+
+```{r}
+csvs$.attrs[3]
+```
+Knowing this, we can use the `start` argument to page through the results:
+
+```{r}
+page_two <- listObjects(cn, 
+                        fromDate = "2020-01-01T00:00:00.000Z", 
+                        toDate = "2021-01-01T00:00:00.000Z", 
+                        formatId = "text/csv", 
+                        count = 5,
+                        start = 5)
+```
